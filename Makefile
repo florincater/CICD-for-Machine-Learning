@@ -26,16 +26,14 @@ update-branch:
 	git push --force origin HEAD:update
 
 hf-login:
-	pip install -U "huggingface_hub[cli]"
+	python -m pip install -U "huggingface_hub[cli]"
 	# fetch and switch to update branch safely
 	git fetch origin update
 	git switch update || git switch -c update origin/update
-	# perform an explicit pull strategy (choose one)
-	# Option A: fast-forward only (fails if non-fast-forward)
+	# perform an explicit pull strategy (fast-forward only here)
 	git pull --ff-only origin update
-	# Option B: rebase (if you want to rebase local commits)
-	# git pull --rebase origin update
-	huggingface-cli login --token $(HF) --add-to-git-credential
+	# invoke the HF CLI via Python module to avoid PATH issues
+	python -m huggingface_hub.cli login --token $(HF) --add-to-git-credential
 
 push-hub: 
 	huggingface-cli upload kingabzpro/Drug-Classification ./App --repo-type=space --commit-message="Sync App files"
@@ -46,4 +44,5 @@ deploy: hf-login push-hub
 
 
 all: install format train eval update-branch deploy
+
 
