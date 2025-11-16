@@ -30,10 +30,11 @@ hf-login:
 	# fetch and switch to update branch safely
 	git fetch origin update
 	git switch update || git switch -c update origin/update
-	# perform an explicit pull strategy (fast-forward only here)
+	# perform an explicit pull strategy
 	git pull --ff-only origin update
-	# invoke the HF CLI via Python module to avoid PATH issues
-	python -m huggingface_hub.cli login --token $(HF) --add-to-git-credential
+	# Use the Python API to login to Hugging Face (reads token from env HF)
+	python -c "import os; from huggingface_hub import HfApi; token=os.environ.get('HF'); \
+if not token: raise SystemExit('HF token not set'); HfApi().login(token=token, add_to_git_credential=True)"
 
 push-hub: 
 	huggingface-cli upload kingabzpro/Drug-Classification ./App --repo-type=space --commit-message="Sync App files"
@@ -44,5 +45,6 @@ deploy: hf-login push-hub
 
 
 all: install format train eval update-branch deploy
+
 
 
