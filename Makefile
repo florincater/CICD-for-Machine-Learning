@@ -24,7 +24,6 @@ update-branch:
 	git config --global user.email $(USER_EMAIL)
 	git commit -am "Update with new results"
 	git push --force origin HEAD:update
-
 hf-login:
 	python -m pip install -U "huggingface_hub[cli]"
 	# fetch and switch to update branch safely
@@ -35,6 +34,7 @@ hf-login:
 	# Use the Python API to login to Hugging Face (reads token from env HF)
 	python - <<'PY'
 import os
+
 from huggingface_hub import HfApi
 
 token = os.environ.get("HF")
@@ -53,6 +53,7 @@ deploy: hf-login push-hub
 
 
 all: install format train eval update-branch deploy
+
 
 
 
