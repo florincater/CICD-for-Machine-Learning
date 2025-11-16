@@ -38,7 +38,7 @@ hf-login:
 
 	token = os.environ.get("HF")
 	if not token:
-    raise SystemExit("HF token not set")
+    	raise SystemExit("HF token not set")
 
 	HfApi().login(token=token, add_to_git_credential=True)
 	PY
@@ -52,6 +52,7 @@ deploy: hf-login push-hub
 
 
 all: install format train eval update-branch deploy
+
 
 
 
