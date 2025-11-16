@@ -33,8 +33,14 @@ hf-login:
 	# perform an explicit pull strategy
 	git pull --ff-only origin update
 	# Use the Python API to login to Hugging Face (reads token from env HF)
-	python -c "import os; from huggingface_hub import HfApi; token=os.environ.get('HF'); \
-if not token: raise SystemExit('HF token not set'); HfApi().login(token=token, add_to_git_credential=True)"
+	python - <<'PY'
+import os
+from huggingface_hub import HfApi
+token = os.environ.get("HF")
+if not token:
+    raise SystemExit("HF token not set")
+HfApi().login(token=token, add_to_git_credential=True)
+PY
 
 push-hub: 
 	huggingface-cli upload kingabzpro/Drug-Classification ./App --repo-type=space --commit-message="Sync App files"
@@ -45,6 +51,7 @@ deploy: hf-login push-hub
 
 
 all: install format train eval update-branch deploy
+
 
 
 
