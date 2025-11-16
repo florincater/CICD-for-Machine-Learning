@@ -33,7 +33,7 @@ hf-login:
 	git pull --ff-only origin update
 	# Use the Python API to login to Hugging Face (reads token from env HF)
 	python - <<'PY'	
-	import os
+	#import os
 	from huggingface_hub import HfApi
 
 	token = os.environ.get("HF")
@@ -52,6 +52,7 @@ deploy: hf-login push-hub
 
 
 all: install format train eval update-branch deploy
+
 
 
 
